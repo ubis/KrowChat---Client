@@ -40,7 +40,7 @@ public class UIManager
      */
     public void removeContact(int id)
     {
-        //ui.removeContact(id);
+        ui.removeContact(id);
     }
     
     /**

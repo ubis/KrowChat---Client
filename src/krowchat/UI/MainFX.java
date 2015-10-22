@@ -92,7 +92,7 @@ public class MainFX extends Application
         
     private static boolean  _KDEBUG;
     private Stage           main;
-    private int             selectedId;
+    private int             selectedId = -1;
     private Label           localName;
     private Label           remoteName;
     private VBox            sidebarVBox;
@@ -723,6 +723,31 @@ public class MainFX extends Application
     public void addChatMessage(String time, String message, int id)
     {
         Platform.runLater(() -> { newChatMessage("", time, message, false, id); });
+    }
+    
+    /**
+     * Removes contact from listbar and from chatbar
+     * @param id contact's id to remove
+     */
+    public void removeContact(int id)
+    {
+        Platform.runLater(() -> 
+        { 
+            int l_id = getLocalID(id);
+            
+            if (selectedId == id)
+                selectedId = -1;
+            
+            if (l_id == -1)
+                return;
+            
+            Label tmp = contacts.get(l_id).getLabel();
+            listbarVBox.getChildren().remove(tmp);
+            chatScrollPane.setContent(new FlowPane());
+            writeField.setDisable(true);
+            contacts.remove(l_id);
+            setRemoteName("");
+        });
     }
         
     /**
