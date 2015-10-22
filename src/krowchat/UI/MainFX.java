@@ -8,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -89,6 +90,7 @@ public class MainFX extends Application
         }
     }
         
+    private static boolean  _KDEBUG;
     private Stage           main;
     private int             selectedId;
     private Label           localName;
@@ -145,6 +147,9 @@ public class MainFX extends Application
         
         main.setOnCloseRequest((WindowEvent e) ->
         {
+            if (_KDEBUG)
+                System.exit(0);
+            
             dummyPopup.show();
             main.hide();
         });
@@ -157,7 +162,7 @@ public class MainFX extends Application
         addSidebarButton("History", "history-icon");
         addSidebarButton("Add Contact", "addcontact-icon");
         addSidebarButton("Settings", "settings-icon");
-        addSidebarButton("Logout", "logout-icon");                        
+        addSidebarButton("Logout", "logout-icon");       
         
         long endTime = System.currentTimeMillis();
         System.out.println("MainFX total execution time: " + (endTime-startTime) + "ms."); 
@@ -175,22 +180,26 @@ public class MainFX extends Application
         topPane.setLayoutX(65.0);
         topPane.getChildren().add(topbar);
         
+        kImageView avatar = new kImageView("/krowchat/Style/avatar.png");
+        avatar.setLayoutX(10.0);
+        avatar.setLayoutY(10.0);
+        topPane.getChildren().add(avatar);
+        
         localName = new Label();
-        Font localFont = new Font("Comfortaa", 27);
-        localName.setLayoutX(14.0);
-        localName.setLayoutY(17.0);
+        localName.setFont(Font.font("Lato Light", 24));
+        localName.setLayoutX(65.0);
+        localName.setLayoutY(8.0);
         localName.setText("ubitauz3r");
         localName.setTextFill(Color.WHITE);
-        localName.setFont(localFont);
         topPane.getChildren().add(localName);
         
         remoteName = new Label();
-        Font remoteFont = new Font("Comfortaa", 27);
-        remoteName.setLayoutX(292.0);
-        remoteName.setLayoutY(17.0);
+        remoteName.setFont(Font.font("Lato Light", 24));
+        remoteName.setLayoutX(290.0);
+        remoteName.setLayoutY(8.0);
         remoteName.setText("Alice Jackson");
         remoteName.setTextFill(Color.WHITE);
-        remoteName.setFont(remoteFont);
+        
         topPane.getChildren().add(remoteName);
         
         Label exitBtn = new Label();
@@ -216,16 +225,8 @@ public class MainFX extends Application
         kImageView sidebar = new kImageView("/krowchat/Style/backgrounds/sidebar.png");
         Pane sidePane = new Pane();
         sidePane.getChildren().add(sidebar);
-        
-        kImageView avatar = new kImageView("/krowchat/Style/profile_image.png");
-        avatar.setFitWidth(45.0);
-        avatar.setFitHeight(45.0);
-        avatar.setLayoutX(10.0);
-        avatar.setLayoutY(14.0);
-        sidePane.getChildren().add(avatar);
-        
+                
         sidebarVBox = new VBox();
-        sidebarVBox.setLayoutY(70.0);
         sidebarVBox.setPrefWidth(65.0);
         sidebarVBox.setAlignment(Pos.CENTER);
         sidePane.getChildren().add(sidebarVBox);
@@ -240,11 +241,12 @@ public class MainFX extends Application
      */
     private void prepareListPane(Pane rootPane)
     {
-        kImageView listbar = new kImageView("/krowchat/Style/backgrounds/listbar.png");
+        kImageView listbar = new kImageView("/krowchat/Style/backgrounds/searchbar.png");
         Pane listPane = new Pane();
         listPane.setLayoutX(65.0);
         listPane.setLayoutY(69.0);
         listPane.getChildren().add(listbar);
+        listPane.setStyle("-fx-border-color: #cdd2d5; -fx-border-width: 0 1px 0 0");
         
         TextField searchField = new TextField();
         searchField.setLayoutX(40.0);
@@ -256,7 +258,7 @@ public class MainFX extends Application
         listbarVBox = new VBox();
         listbarVBox.setLayoutY(49.0);
         listbarVBox.setPrefSize(280.0, 582.0);
-        listbarVBox.setPadding(new Insets(0, 10, 0, 10));    
+        listbarVBox.setPadding(new Insets(0, 0, 0, 0));    
         listPane.getChildren().add(listbarVBox);
         
         rootPane.getChildren().add(listPane);   
@@ -269,19 +271,18 @@ public class MainFX extends Application
      */
     private void prepareChatPane(Pane rootPane)
     {
-        kImageView chatbar = new kImageView("/krowchat/Style/backgrounds/chatbar.png");
         Pane chatPane = new Pane();
         chatPane.setLayoutX(345.0);
-        chatPane.setLayoutY(69.0);
-        chatPane.getChildren().add(chatbar);
+        chatPane.setLayoutY(66.0);
         
         chatScrollPane = new ScrollPane();
-        chatScrollPane.setPrefSize(800.0, 570.0);
+        chatScrollPane.setPrefSize(799.0, 570.0);
         chatScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        chatScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         chatScrollPane.setStyle("-fx-background-color: transparent;");
-        
         chatFlowPane = new FlowPane();
-        chatFlowPane.setPrefSize(775.0, 568.0);        
+        chatFlowPane.setPrefSize(775.0, 568.0);    
+        
         chatScrollPane.setContent(chatFlowPane);
         
         chatFlowPane.heightProperty().addListener(new ChangeListener() 
@@ -307,13 +308,13 @@ public class MainFX extends Application
         Pane writePane = new Pane();
         writePane.setLayoutX(345.0);
         writePane.setLayoutY(642.0);    
-        writePane.setPrefSize(800.0, 60.0);
+        writePane.setPrefSize(799.0, 58.0);
+        writePane.setStyle("-fx-border-color: #cdd2d5; -fx-border-width: 1px 0 0 0");
         
         writeField = new TextField();
         writeField.setLayoutX(15.0);
         writeField.setLayoutY(11.0);
         writeField.setPrefSize(672.0, 35.0);
-        writeField.setStyle("-fx-background-color: transparent;");
         writePane.getChildren().add(writeField);
         
         kImageView sendBtn = new kImageView("/krowchat/Style/icons/send-icon.png");
@@ -343,33 +344,37 @@ public class MainFX extends Application
         tmp.setContentDisplay(ContentDisplay.TOP);
         tmp.setTextFill(Color.WHITE);
         tmp.setGraphic(icon);
-        tmp.setPrefSize(63.0, 63.0);
+        tmp.setPrefSize(65.0, 67.0);
         tmp.setFont(new Font(10));
                 
-        tmp.addEventHandler(MouseEvent.ANY, (MouseEvent e) ->
+        tmp.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>()
         {
+
             boolean pressed = false;
-                        
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED)
+            @Override
+            public void handle(MouseEvent e)
             {
-                tmp.setText(name);
-                tmp.setStyle("-fx-background-color: #182333;");               
-            }
-            else if (e.getEventType() == MouseEvent.MOUSE_EXITED)
-            {
-                pressed = false;
-                tmp.setText("");
-                tmp.setStyle("-fx-background-color: transparent;");             
-            }
-            else if (e.getEventType() == MouseEvent.MOUSE_PRESSED)
-            {
-                pressed = true;
-                tmp.setStyle("-fx-background-color: black;");           
-            }
-            else if (e.getEventType() == MouseEvent.MOUSE_RELEASED)
-            {
-                if (!pressed) return;
-                tmp.setStyle("-fx-background-color: #182333;");           
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED)
+                {
+                    tmp.setText(name);
+                    tmp.setStyle("-fx-background-color: #182333;");
+                }
+                else if (e.getEventType() == MouseEvent.MOUSE_EXITED)
+                {
+                    pressed = false;
+                    tmp.setText("");
+                    tmp.setStyle("-fx-background-color: transparent;");
+                }
+                else if (e.getEventType() == MouseEvent.MOUSE_PRESSED)
+                {
+                    pressed = true;
+                    tmp.setStyle("-fx-background-color: black;");
+                }
+                else if (e.getEventType() == MouseEvent.MOUSE_RELEASED)
+                {
+                    if (!pressed) return;
+                    tmp.setStyle("-fx-background-color: #182333;");
+                }
             }
         });
         
@@ -411,6 +416,9 @@ public class MainFX extends Application
             
         Pane msgPane = new Pane();
         msgPane.setPrefWidth(793.0);
+        msgPane.setPadding(new Insets(10, 0, 0, 0));
+        msgPane.setStyle("-fx-border-color: #cdd2d5; -fx-border-width: 1px 0 0 0");
+        
         Label msgNameLabel = new Label();
         msgNameLabel.setLayoutX(14.0);
         msgNameLabel.setLayoutY(14.0);
@@ -439,7 +447,7 @@ public class MainFX extends Application
         msgText.setWrappingWidth(730.0);
         msgText.setFill(Color.valueOf("#727a7e"));
         msgPane.getChildren().add(msgText);
-            
+                    
         if (tmp != null)
         {
             tmp.getChildren().add(msgPane);
@@ -467,10 +475,11 @@ public class MainFX extends Application
         tmp.setText(name);
         Font listFont = new Font("Comfortaa", 17);
         tmp.setFont(listFont);
-        kImageView profile_img = new kImageView("/krowchat/Style/profile_image.png");
+        kImageView profile_img = new kImageView("/krowchat/Style/avatar.png");
         profile_img.setFitWidth(43.0);
         profile_img.setFitHeight(44.0);
         tmp.setGraphic(profile_img);
+        tmp.setPadding(new Insets(0, 5, 0, 5));
             
         tmp.addEventHandler(MouseEvent.ANY, (MouseEvent e) ->
         {           
@@ -756,5 +765,15 @@ public class MainFX extends Application
         {
             start(new Stage());
         });       
+    }
+    
+    /**
+     * Main static method for test and/or debug purposes
+     * @param args program args to launch
+     */
+    public static void main(String[] args)
+    {
+        _KDEBUG = true;
+        launch(args);
     }
 }
