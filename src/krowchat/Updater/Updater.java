@@ -12,7 +12,7 @@ import krowchat.Manager.AuthManager;
 public class Updater extends Thread
 {
     boolean running     = true;
-    int     version     = 1;
+    int     version     = 2;
     String  updateUrl   = "http://draco.us.lt/krowupdate/";
     
     /**
