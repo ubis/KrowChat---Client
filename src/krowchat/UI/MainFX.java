@@ -315,6 +315,7 @@ public class MainFX extends Application
         writeField.setLayoutX(15.0);
         writeField.setLayoutY(11.0);
         writeField.setPrefSize(672.0, 35.0);
+        writeField.setDisable(true);
         writePane.getChildren().add(writeField);
         
         kImageView sendBtn = new kImageView("/krowchat/Style/icons/send-icon.png");
@@ -497,6 +498,7 @@ public class MainFX extends Application
                     selectedId = getLocalIDByLabel(tmp);
                     chatFlowPane = contacts.get(selectedId).getMessages();
                     chatScrollPane.setContent(chatFlowPane);
+                    writeField.setDisable(false);
                 }
             }
         }); 
@@ -529,6 +531,9 @@ public class MainFX extends Application
      */
     private void writeMessage()
     {
+        if (selectedId == -1)
+            return;
+            
         String message = writeField.getText();
       
         if (message.length() == 0)
@@ -538,8 +543,7 @@ public class MainFX extends Application
         writeField.setText("");
         writeField.requestFocus();   
         
-        if (selectedId > -1)
-            UIManager.getInstance().sendMessage(getIdByLocal(selectedId), message);
+        UIManager.getInstance().sendMessage(getIdByLocal(selectedId), message);
     }
     
     /**
