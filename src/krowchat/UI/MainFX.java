@@ -189,7 +189,7 @@ public class MainFX extends Application
         localName.setFont(Font.font("Lato Light", 24));
         localName.setLayoutX(65.0);
         localName.setLayoutY(8.0);
-        localName.setText("ubitauz3r");
+        localName.setText("");
         localName.setTextFill(Color.WHITE);
         topPane.getChildren().add(localName);
         
@@ -197,7 +197,7 @@ public class MainFX extends Application
         remoteName.setFont(Font.font("Lato Light", 24));
         remoteName.setLayoutX(290.0);
         remoteName.setLayoutY(8.0);
-        remoteName.setText("Alice Jackson");
+        remoteName.setText("");
         remoteName.setTextFill(Color.WHITE);
         
         topPane.getChildren().add(remoteName);
