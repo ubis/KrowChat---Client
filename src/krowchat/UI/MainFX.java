@@ -712,7 +712,6 @@ public class MainFX extends Application
         
     /**
      * Writes a new message in chatbar
-     * @param name message source contact name
      * @param time time when message was written
      * @param message message
      * @param id message source contact's id
