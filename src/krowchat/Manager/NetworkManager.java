@@ -22,7 +22,7 @@ public class NetworkManager
         netMan = this;
         
         // start up client
-        netClient = new Client();
+        netClient = new Client(163840, 20480);
 	netClient.start();
 
         // register packets
