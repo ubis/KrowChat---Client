@@ -536,7 +536,7 @@ public class MainFX extends Application
             
         String message = writeField.getText();
       
-        if (message.length() == 0)
+        if (message.length() == 0 || message.length() > 18000)
             return;
 
         newChatMessage(getLocalName(), "00:00", message);
